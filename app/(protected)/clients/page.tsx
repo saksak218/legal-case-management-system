@@ -2,7 +2,6 @@ import { Button } from "@/components/ui/button";
 import { GET } from "../../api/clients/route";
 import ClientCard from "@/components/ClientCard";
 import { UserPlus } from "lucide-react";
-import ClientModal from "@/components/ClientModal";
 import {
   Dialog,
   DialogContent,
@@ -13,6 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import ClientModal from "@/components/ClientModal";
 
 const Page = async () => {
   const data = await GET();
@@ -28,13 +28,8 @@ const Page = async () => {
           </p>
         </div>
         <div>
-          {/* <Button className="bg-blue-900 hover:bg-blue-950 cursor-pointer">
-            <span>
-              <UserPlus className="size-4" />
-            </span>
-            <ClientModal />
-          </Button> */}
-          <Dialog>
+          <ClientModal />
+          {/* <Dialog>
             <DialogTrigger className="flex items-center gap-x-1 bg-blue-900 hover:bg-blue-950 px-3 py-1.5 rounded-md text-white cursor-pointer">
               <UserPlus className="size-4" />
               Add Client
@@ -78,7 +73,7 @@ const Page = async () => {
                 </Button>
               </div>
             </DialogContent>
-          </Dialog>
+          </Dialog> */}
         </div>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
@@ -101,5 +96,3 @@ const Page = async () => {
 };
 
 export default Page;
-
-//   return <div>{clients.map((client: { name: string }) => client.name)}</div>;

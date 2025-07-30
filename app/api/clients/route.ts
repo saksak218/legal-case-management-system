@@ -45,18 +45,58 @@ export const GET = async () => {
 };
 
 // Create a client
+// export const POST = async (request: any) => {
+//   const user = await currentUser();
+//   if (!user) {
+//     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+//   }
+
+//   await dbConnect();
+//   console.log(request);
+//   const { name, email, phone, address } = await request;
+
+//   try {
+//     const client = await Client.create({ name, email, phone, address });
+//     return NextResponse.json(client, { status: 201 });
+//   } catch (error) {
+//     console.error("Error creating client:", error);
+//     return NextResponse.json(
+//       { error: "Failed to create client" },
+//       { status: 500 }
+//     );
+//   }
+// };
+
 export const POST = async (request: Request) => {
-  //   const user = await currentUser();
-  //   if (!user) {
-  //     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  //   }
+  const user = await currentUser();
+  if (!user) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
 
   await dbConnect();
-  const { name, email, phone, address } = await request.json();
 
   try {
+    const { name, email, phone, address } = await request.json();
+
+    if (!name || !email) {
+      return NextResponse.json(
+        { error: "Name and email are required" },
+        { status: 400 }
+      );
+    }
+
     const client = await Client.create({ name, email, phone, address });
-    return NextResponse.json(client, { status: 201 });
+
+    return NextResponse.json(
+      {
+        id: client.id,
+        name: client.name,
+        email: client.email,
+        phone: client.phone,
+        address: client.address,
+      },
+      { status: 201 }
+    );
   } catch (error) {
     console.error("Error creating client:", error);
     return NextResponse.json(

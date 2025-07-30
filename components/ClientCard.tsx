@@ -11,11 +11,13 @@ const ClientCard = ({ client }: any) => {
         <ul className="text-sm">
           <li className="flex gap-x-2">
             <span className="font-semibold"> Email:</span>
-            <span className="text-muted-foreground">{email}</span>
+            <span className="text-muted-foreground">{email ?? "No email"}</span>
           </li>
           <li className="flex gap-x-2">
             <span className="font-semibold"> Phone:</span>
-            <span className="text-muted-foreground">{phone}</span>
+            <span className="text-muted-foreground">
+              {phone ?? "No phone number"}
+            </span>
           </li>
         </ul>
 
