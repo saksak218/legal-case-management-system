@@ -13,11 +13,9 @@ import {
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import ClientModal from "@/components/ClientModal";
+import ClientList from "@/components/ClientList";
 
-const Page = async () => {
-  const data = await GET();
-  const clients = await data.json();
-
+const Page = () => {
   return (
     <div>
       <div className="flex justify-between items-center mb-4">
@@ -76,21 +74,7 @@ const Page = async () => {
           </Dialog> */}
         </div>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
-        {clients.map(
-          (client: {
-            _id?: any;
-            name?: string;
-            email?: string;
-            address?: string;
-            phone?: string;
-            activeCases?: number;
-            totalCases?: number;
-          }) => (
-            <ClientCard key={client._id} client={client} />
-          )
-        )}
-      </div>
+      <ClientList />
     </div>
   );
 };

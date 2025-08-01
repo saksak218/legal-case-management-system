@@ -1,21 +1,49 @@
+// app/api/clients/route.ts (unchanged)
 "use server";
-
 import dbConnect from "@/lib/mongodb";
 import Case from "@/models/Case";
 import Client from "@/models/Client";
 import { currentUser } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
-// Get all clients
-export const GET = async () => {
+export const GET = async (request: Request) => {
   const user = await currentUser();
   if (!user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   await dbConnect();
+
+  const url = new URL(request.url);
+  const page = parseInt(url.searchParams.get("page") || "1");
+  const limit = parseInt(url.searchParams.get("limit") || "3");
+  const search = url.searchParams.get("search") || "";
+  const skip = (page - 1) * limit;
+
   try {
-    const clients = await Client.find().lean();
+    const searchQuery = search
+      ? {
+          $or: [
+            { name: { $regex: search, $options: "i" } },
+            { email: { $regex: search, $options: "i" } },
+          ],
+        }
+      : {};
+
+    const clients = await Client.find(searchQuery)
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit)
+      .lean();
+
+    console.log(
+      `API: Page ${page}, Skip: ${skip}, Limit: ${limit}, Search: ${search}`
+    );
+    console.log(
+      "API: Fetched clients:",
+      clients.map((c: any) => c._id)
+    );
+
     const cases = await Case.find().lean();
 
     const clientsWithCaseCounts = clients.map((client) => {
@@ -32,9 +60,16 @@ export const GET = async () => {
       };
     });
 
-    return NextResponse.json(clientsWithCaseCounts);
+    const totalClients = await Client.countDocuments(searchQuery);
+    const hasMore = skip + clients.length < totalClients;
 
-    // return NextResponse.json(clients);
+    console.log(`API: Total clients: ${totalClients}, Has more: ${hasMore}`);
+
+    return NextResponse.json({
+      clients: clientsWithCaseCounts,
+      hasMore,
+      totalClients,
+    });
   } catch (error) {
     console.error("Error fetching clients:", error);
     return NextResponse.json(
@@ -43,29 +78,6 @@ export const GET = async () => {
     );
   }
 };
-
-// Create a client
-// export const POST = async (request: any) => {
-//   const user = await currentUser();
-//   if (!user) {
-//     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-//   }
-
-//   await dbConnect();
-//   console.log(request);
-//   const { name, email, phone, address } = await request;
-
-//   try {
-//     const client = await Client.create({ name, email, phone, address });
-//     return NextResponse.json(client, { status: 201 });
-//   } catch (error) {
-//     console.error("Error creating client:", error);
-//     return NextResponse.json(
-//       { error: "Failed to create client" },
-//       { status: 500 }
-//     );
-//   }
-// };
 
 export const POST = async (request: Request) => {
   const user = await currentUser();
