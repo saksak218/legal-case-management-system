@@ -20,7 +20,9 @@ export function SiteHeader() {
           className="mx-2 data-[orientation=vertical]:h-4"
         />
         {/* <h1 className="font-medium text-base"></h1> */}
-        <Logo classNames="text-lg">Legal Case Management System</Logo>
+        <Logo classNames="text-sm sm:text-lg">
+          Legal Case Management System
+        </Logo>
         <div className="flex items-center gap-2 ml-auto">
           <Button variant="ghost" asChild size="sm" className="hidden sm:flex">
             <a

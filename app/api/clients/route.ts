@@ -90,11 +90,8 @@ export const POST = async (request: Request) => {
   try {
     const { name, email, phone, address } = await request.json();
 
-    if (!name || !email) {
-      return NextResponse.json(
-        { error: "Name and email are required" },
-        { status: 400 }
-      );
+    if (!name) {
+      return NextResponse.json({ error: "Name is required" }, { status: 400 });
     }
 
     const client = await Client.create({ name, email, phone, address });

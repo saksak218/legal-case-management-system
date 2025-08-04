@@ -1,0 +1,15 @@
+A- Date - Human readable with day
+
+// Columns
+1- Sr. no
+4- Case title
+5- Case description
+2- Computer code
+3- Previous Date
+6- Case proceeding - (Category) ['Summens', 'Written statement', 'Evidence of plaintiff', 'Arguments', 'Evidence of defendent', 'Final arguments', 'Order']
+7- Next date
+8- Total fee // Hidden
+9- Recieved fee // Hidden
+10- Court name
+11- Case decision - ['Decree', 'Dismiss']
+12- Status
